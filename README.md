@@ -1,2 +1,2 @@
-# go-folder
+# Bowerbird
 Golang based directory organizer
