@@ -2,8 +2,10 @@ package scanner
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -12,7 +14,20 @@ type FileData struct {
 	Path       string
 	CreatedAt  time.Time
 	ModifiedAt time.Time
-	FileType   string
+	Signature  fileSignature
+}
+
+type fileSignature struct {
+	Extension string
+	Signature []byte
+	Offset    int
+}
+
+var knownSignatures = []fileSignature{
+	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE0}},
+	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xDB}},
+	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xEE}},
+	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE1}},
 }
 
 func Scan(directoryPath string, hidden bool, ignore_files []string, ignore_dir bool, get_creation bool, get_modified bool, get_type bool) []FileData {
@@ -31,12 +46,30 @@ func Scan(directoryPath string, hidden bool, ignore_files []string, ignore_dir b
 		}
 		full_path := filepath.Join(directoryPath, element.Name())
 		info, _ := os.Stat(full_path)
+		sig := fileSignature{
+			Extension: filepath.Ext(full_path),
+		}
 		item := FileData{
 			Name:       element.Name(),
 			Path:       full_path,
 			ModifiedAt: info.ModTime(),
+			Signature:  sig,
 		}
 		files = append(files, item)
 	}
 	return files
+}
+
+func magicType(filePath string) string {
+	f, err := os.Open(filePath)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error reading file %v\n", err)
+	}
+	defer f.Close()
+	magicBytes := make([]byte, 4)
+	_, err = io.ReadFull(f, magicBytes)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error reading file %v\n", err)
+	}
+	return "temp"
 }
