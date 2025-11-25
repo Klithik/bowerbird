@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -14,6 +15,7 @@ type FileData struct {
 	CreatedAt  time.Time
 	ModifiedAt time.Time
 	Signature  fileSignature
+	Category   string
 }
 
 type fileSignature struct {
@@ -21,6 +23,17 @@ type fileSignature struct {
 	Signature []byte
 	Offset    int
 }
+
+const (
+	CategoryImage      = "Image"
+	CategoryVideo      = "Video"
+	CategoryAudio      = "Audio"
+	CategoryDocument   = "Document"
+	CategoryExecutable = "Executable"
+	CategoryArchive    = "Archive"
+	CategoryCode       = "Code"
+	CategoryUnkown     = "Unkown"
+)
 
 var knownSignatures = []fileSignature{
 	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE0}},
@@ -53,10 +66,43 @@ func Scan(directoryPath string, hidden bool, ignore_files []string, ignore_dir b
 			Path:       full_path,
 			ModifiedAt: info.ModTime(),
 			Signature:  sig,
+			Category:   obtainCategory(element.Name()),
 		}
 		files = append(files, item)
 	}
 	return files
+}
+
+func obtainCategory(file string) string {
+	ext := strings.ToLower(filepath.Ext(file))
+	//CATEGORY MAP
+	categoryMap := map[string]string{
+		//IMAGE
+		".jpg": CategoryImage, ".jpeg": CategoryImage, ".png": CategoryImage, ".gif": CategoryImage,
+		".svg": CategoryImage, ".webp": CategoryImage, ".bmp": CategoryImage,
+		//VIDEO
+		".mp4": CategoryVideo, ".avi": CategoryVideo, ".mkv": CategoryVideo, ".mov": CategoryVideo,
+		".wmv": CategoryVideo, ".flv": CategoryVideo,
+		//AUDIO
+		".mp3": CategoryAudio, ".wav": CategoryAudio, ".flac": CategoryAudio, ".aac": CategoryAudio,
+		".ogg": CategoryAudio,
+		//DOCUMENTS
+		".pdf": CategoryDocument, ".doc": CategoryDocument, ".docx": CategoryDocument, ".txt": CategoryDocument,
+		".rtf": CategoryDocument, ".pptx": CategoryDocument, ".odt": CategoryDocument,
+		//EXECUTABLES
+		".exe": CategoryExecutable, ".msi": CategoryExecutable, ".bat": CategoryExecutable,
+		".sh": CategoryExecutable, ".app": CategoryExecutable,
+		//ARCHIVES
+		".tar": CategoryArchive, ".zip": CategoryArchive, ".rar": CategoryArchive, ".7z": CategoryArchive,
+		".gz": CategoryArchive,
+		//CODE
+		".go": CategoryCode, ".py": CategoryCode, ".js": CategoryCode, ".java": CategoryCode,
+		".cpp": CategoryCode, ".c": CategoryCode, ".ts": CategoryCode, ".rb": CategoryCode,
+	}
+	if category, exists := categoryMap[ext]; exists {
+		return category
+	}
+	return "Unkown"
 }
 
 func magicType(filePath string) string {
