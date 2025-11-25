@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
 	"github.com/Klithik/bowerbird/internal/manipulator"
 	"github.com/Klithik/bowerbird/internal/scanner"
