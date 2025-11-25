@@ -12,10 +12,10 @@ func MoveFiles(files []scanner.FileData, target string) [][2]string {
 	var output [][2]string
 	for _, element := range files {
 		targetPath := filepath.Join(target, element.Category)
-		info, err := os.Stat(targetPath)
+		_, err := os.Stat(targetPath)
 		if os.IsNotExist(err) {
-			mode := info.Mode()
-			os.Mkdir(targetPath, mode.Perm())
+			info, _ := os.Stat(target)
+			os.Mkdir(targetPath, info.Mode().Perm())
 		}
 		targetPath = filepath.Join(targetPath, element.Name)
 		err = os.Rename(element.Path, targetPath)

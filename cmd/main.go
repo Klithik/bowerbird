@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/Klithik/bowerbird/internal/manipulator"
+	"github.com/Klithik/bowerbird/internal/scanner"
 )
 
 func main() {
@@ -23,5 +26,6 @@ func main() {
 
 	flag.Parse()
 
-	fmt.Println(strat)
+	files := scanner.Scan(source_dir, ignore_hidden, true, false, false, false)
+	manipulator.MoveFiles(files, end_dir)
 }

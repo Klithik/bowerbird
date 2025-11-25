@@ -32,7 +32,7 @@ const (
 	CategoryExecutable = "Executable"
 	CategoryArchive    = "Archive"
 	CategoryCode       = "Code"
-	CategoryUnkown     = "Unkown"
+	CategoryUnknown    = "Unknown"
 )
 
 var knownSignatures = []fileSignature{
@@ -42,7 +42,7 @@ var knownSignatures = []fileSignature{
 	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE1}},
 }
 
-func Scan(directoryPath string, hidden bool, ignore_files []string, ignore_dir bool, get_creation bool, get_modified bool, get_type bool) []FileData {
+func Scan(directoryPath string, hidden bool, ignore_dir bool, get_creation bool, get_modified bool, get_type bool) []FileData {
 	var files []FileData
 	read, err := os.ReadDir(directoryPath)
 	if err != nil {
@@ -102,7 +102,7 @@ func obtainCategory(file string) string {
 	if category, exists := categoryMap[ext]; exists {
 		return category
 	}
-	return "Unkown"
+	return "Unknown"
 }
 
 func magicType(filePath string) string {
