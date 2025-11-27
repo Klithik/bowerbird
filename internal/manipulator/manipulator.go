@@ -8,7 +8,7 @@ import (
 	"github.com/Klithik/bowerbird/internal/scanner"
 )
 
-func MoveFiles(files []scanner.FileData, target string) [][2]string {
+func MoveFilesbyType(files []scanner.FileData, target string) [][2]string {
 	var output [][2]string
 	for _, element := range files {
 		targetPath := filepath.Join(target, element.Category)

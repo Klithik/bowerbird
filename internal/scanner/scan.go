@@ -42,7 +42,7 @@ var knownSignatures = []fileSignature{
 	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE1}},
 }
 
-func Scan(directoryPath string, hidden bool, ignore_dir bool, get_creation bool, get_modified bool, get_type bool) []FileData {
+func Scan(directoryPath string, hidden bool, ignore_dir bool) []FileData {
 	var files []FileData
 	read, err := os.ReadDir(directoryPath)
 	if err != nil {
