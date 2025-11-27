@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"os"
 
 	"github.com/Klithik/bowerbird/internal/manipulator"
 	"github.com/Klithik/bowerbird/internal/scanner"
@@ -25,9 +27,31 @@ func main() {
 
 	flag.Parse()
 
+	if dir_verification(source_dir) == false {
+		os.Exit(1)
+	}
+	if dir_verification(end_dir) == false {
+		os.Exit(1)
+	}
+
 	files := scanner.Scan(source_dir, ignore_hidden, true)
 
 	if strat == "type" {
 		manipulator.MoveFilesbyType(files, end_dir)
 	}
+}
+
+func dir_verification(input string) bool {
+	info, err := os.Stat(input)
+	if os.IsNotExist(err) {
+		fmt.Println("Path doesnt exist", input)
+		return false
+	} else if err != nil {
+		fmt.Println("Directory could not be verified", input)
+		return false
+	} else if info.IsDir() == false {
+		fmt.Println("Path provided is not a directory")
+		return false
+	}
+	return true
 }
