@@ -49,6 +49,10 @@ func Scan(directoryPath string, hidden bool, ignore_dir bool) []FileData {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	if len(read) == 0 {
+		fmt.Println("Empty directory")
+		os.Exit(1)
+	}
 	for _, element := range read {
 		if element.IsDir() == true && ignore_dir == true {
 			continue

@@ -49,7 +49,7 @@ func dir_verification(input string) bool {
 	} else if err != nil {
 		fmt.Println("Directory could not be verified", input)
 		return false
-	} else if info.IsDir() {
+	} else if info.IsDir() == false {
 		fmt.Println("Path provided is not a directory")
 		return false
 	}
