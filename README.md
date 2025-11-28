@@ -3,6 +3,9 @@
 A lightweight, flexible directory organizer written in Go that automatically sorts your files based on type, date, or both.
 
 > [!WARNING]
+> Creation date has not been validated in MacOs, so i recommend not using the flag "creation" in those systems.
+
+> [!WARNING]
 > Currently Unix-compatible only. Windows support is not available yet.
 
 ## What is Bowerbird?
