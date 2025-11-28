@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var source_dir, end_dir string
-	var category, ignore_hidden, year, month, datePrio bool
+	var category, ignore_hidden, year, month, datePrio, look_creation bool
 
 	const categoryDoc string = "The elements should be sorted based on file type (extension)"
 	flag.BoolVar(&category, "type", true, categoryDoc)
@@ -32,6 +32,10 @@ func main() {
 	flag.BoolVar(&month, "month", false, monthDoc)
 
 	const datePrioDoc string = "Define if the top directory created by bowerbird is file type or date, so if true the directory of a file would be for example, 2025>October>Image, and if false Image>2025>October"
+	flag.BoolVar(&datePrio, "date_prio", false, datePrioDoc)
+
+	const look_creationDoc string = "Looks for file creatio date instead of last modification, this is not supported in every filesystem, if it fails it will just use the last modification date. This flag doesnt do anything if neither the year or month are true"
+	flag.BoolVar(&look_creation, "creation", false, look_creationDoc)
 
 	if month == true {
 		year = true
@@ -46,7 +50,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	files := scanner.Scan(source_dir, ignore_hidden, true)
+	files := scanner.Scan(source_dir, ignore_hidden, true, look_creation)
 	manipulator.MoveFiles(files, end_dir, year, month, category, datePrio)
 }
 

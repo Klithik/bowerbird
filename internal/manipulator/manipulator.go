@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"time"
 
 	"github.com/Klithik/bowerbird/internal/scanner"
 )
@@ -12,14 +13,17 @@ func MoveFiles(files []scanner.FileData, target string, year bool, month bool, c
 	var output [][2]string
 	for _, element := range files {
 		targetPath := target
+		fileMonth := element.ModifiedAt.Month().String()
+		fileYear := strconv.Itoa(element.ModifiedAt.Year())
+		if (element.CreatedAt != time.Time{}) {
+			fileMonth = element.CreatedAt.Month().String()
+			fileYear = strconv.Itoa(element.CreatedAt.Year())
+		}
 		if datePrio == true {
 			if month == true {
-				fileMonth := element.ModifiedAt.Month().String()
-				fileYear := strconv.Itoa(element.ModifiedAt.Year())
 				targetPath = filepath.Join(target, fileYear)
 				targetPath = filepath.Join(target, fileMonth)
 			} else if year == true {
-				fileYear := strconv.Itoa(element.ModifiedAt.Year())
 				targetPath = filepath.Join(target, fileYear)
 			}
 			if category == true {
@@ -30,12 +34,9 @@ func MoveFiles(files []scanner.FileData, target string, year bool, month bool, c
 				targetPath = filepath.Join(target, element.Category)
 			}
 			if month == true {
-				fileMonth := element.ModifiedAt.Month().String()
-				fileYear := strconv.Itoa(element.ModifiedAt.Year())
 				targetPath = filepath.Join(target, fileYear)
 				targetPath = filepath.Join(target, fileMonth)
 			} else if year == true {
-				fileYear := strconv.Itoa(element.ModifiedAt.Year())
 				targetPath = filepath.Join(target, fileYear)
 			}
 		}

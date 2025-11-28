@@ -1,12 +1,15 @@
+//go:build linux || darwin
+
 package scanner
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"golang.org/x/sys/unix"
 )
 
 type FileData struct {
@@ -42,7 +45,7 @@ var knownSignatures = []fileSignature{
 	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE1}},
 }
 
-func Scan(directoryPath string, hidden bool, ignore_dir bool) []FileData {
+func Scan(directoryPath string, hidden bool, ignore_dir bool, look_creation bool) []FileData {
 	var files []FileData
 	read, err := os.ReadDir(directoryPath)
 	if err != nil {
@@ -65,11 +68,19 @@ func Scan(directoryPath string, hidden bool, ignore_dir bool) []FileData {
 		sig := fileSignature{
 			Extension: filepath.Ext(full_path),
 		}
+		var creationDate time.Time = time.Time{}
+		if look_creation == true {
+			creationDate, err = obtainCreationDate(full_path)
+			if err != nil {
+				creationDate = time.Time{}
+			}
+		}
 		item := FileData{
 			Name:       element.Name(),
 			Path:       full_path,
 			ModifiedAt: info.ModTime(),
 			Signature:  sig,
+			CreatedAt:  creationDate,
 			Category:   obtainCategory(element.Name()),
 		}
 		files = append(files, item)
@@ -109,16 +120,14 @@ func obtainCategory(file string) string {
 	return "Unknown"
 }
 
-func magicType(filePath string) string {
-	f, err := os.Open(filePath)
+func obtainCreationDate(file string) (time.Time, error) {
+	var stat unix.Statx_t
+	err := unix.Statx(unix.AT_FDCWD, file, 0, unix.STATX_BTIME, &stat)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error reading file %v\n", err)
+		return time.Time{}, err
 	}
-	defer f.Close()
-	magicBytes := make([]byte, 4)
-	_, err = io.ReadFull(f, magicBytes)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error reading file %v\n", err)
+	if stat.Mask&unix.STATX_BTIME == 0 {
+		return time.Time{}, fmt.Errorf("birth time not available")
 	}
-	return "temp"
+	return time.Unix(stat.Btime.Sec, int64(stat.Btime.Nsec)), nil
 }
