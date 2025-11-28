@@ -108,17 +108,3 @@ func obtainCategory(file string) string {
 	}
 	return "Unknown"
 }
-
-func magicType(filePath string) string {
-	f, err := os.Open(filePath)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error reading file %v\n", err)
-	}
-	defer f.Close()
-	magicBytes := make([]byte, 4)
-	_, err = io.ReadFull(f, magicBytes)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error reading file %v\n", err)
-	}
-	return "temp"
-}
