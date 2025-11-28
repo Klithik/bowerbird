@@ -10,11 +10,11 @@ import (
 )
 
 func main() {
-	var strat, source_dir, end_dir string
-	var ignore_hidden bool
+	var source_dir, end_dir string
+	var category, ignore_hidden, year, month, datePrio bool
 
-	const stratDoc string = "What should the folder be sorted by: the possible values are:\n-year: in order to place all valid files inside a year of creation folder\n-type: in order to place all valid files inside a folder based on its filetype (bases on extension by default)"
-	flag.StringVar(&strat, "strategy", "type", stratDoc)
+	const categoryDoc string = "The elements should be sorted based on file type (extension)"
+	flag.BoolVar(&category, "type", true, categoryDoc)
 
 	const source_dirDoc string = "The directory to be sorted, by default it uses the current directory"
 	flag.StringVar(&source_dir, "source", ".", source_dirDoc)
@@ -24,6 +24,18 @@ func main() {
 
 	const ignoreHiddenDoc string = "Ignores hidden files (files starting with a '.' character)"
 	flag.BoolVar(&ignore_hidden, "ignore_hidden", true, ignoreHiddenDoc)
+
+	const yearDoc string = "Sort elements by last modification year"
+	flag.BoolVar(&year, "year", false, yearDoc)
+
+	const monthDoc string = "Sort elements by last modification month. If this flag is enabled, year is also used"
+	flag.BoolVar(&month, "month", false, monthDoc)
+
+	const datePrioDoc string = "Define if the top directory created by bowerbird is file type or date, so if true the directory of a file would be for example, 2025>October>Image, and if false Image>2025>October"
+
+	if month == true {
+		year = true
+	}
 
 	flag.Parse()
 
@@ -35,10 +47,7 @@ func main() {
 	}
 
 	files := scanner.Scan(source_dir, ignore_hidden, true)
-
-	if strat == "type" {
-		manipulator.MoveFilesbyType(files, end_dir)
-	}
+	manipulator.MoveFiles(files, end_dir, year, month, category, datePrio)
 }
 
 func dir_verification(input string) bool {
