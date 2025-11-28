@@ -31,6 +31,8 @@ func main() {
 	const monthDoc string = "Sort elements by last modification month. If this flag is enabled, year is also used"
 	flag.BoolVar(&month, "month", false, monthDoc)
 
+	const datePrioDoc string = "Define if the top directory created by bowerbird is file type or date, so if true the directory of a file would be for example, 2025>October>Image, and if false Image>2025>October"
+
 	if month == true {
 		year = true
 	}
