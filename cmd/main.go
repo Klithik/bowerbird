@@ -11,7 +11,7 @@ import (
 
 func main() {
 	var strat, source_dir, end_dir string
-	var ignore_hidden bool
+	var ignore_hidden, year, month bool
 
 	const stratDoc string = "What should the folder be sorted by: the possible values are:\n-year: in order to place all valid files inside a year of creation folder\n-type: in order to place all valid files inside a folder based on its filetype (bases on extension by default)"
 	flag.StringVar(&strat, "strategy", "type", stratDoc)
@@ -24,6 +24,16 @@ func main() {
 
 	const ignoreHiddenDoc string = "Ignores hidden files (files starting with a '.' character)"
 	flag.BoolVar(&ignore_hidden, "ignore_hidden", true, ignoreHiddenDoc)
+
+	const yearDoc string = "Sort elements by last modification year"
+	flag.BoolVar(&year, "year", false, yearDoc)
+
+	const monthDoc string = "Sort elements by last modification month. If this flag is enabled, year is also used"
+	flag.BoolVar(&month, "month", false, monthDoc)
+
+	if month == true {
+		year = true
+	}
 
 	flag.Parse()
 
