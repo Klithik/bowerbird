@@ -1,6 +1,7 @@
 package manipulator
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -11,6 +12,10 @@ import (
 
 func MoveFiles(files []scanner.FileData, target string, year bool, month bool, category bool, datePrio bool) [][2]string {
 	var output [][2]string
+	fmt.Printf("The category is %t\n", category)
+	fmt.Printf("The year is %t\n", year)
+	fmt.Printf("The month is %t\n", month)
+	fmt.Printf("The date prio is %t\n", datePrio)
 	for _, element := range files {
 		targetPath := target
 		fileMonth := element.ModifiedAt.Month().String()
@@ -21,23 +26,23 @@ func MoveFiles(files []scanner.FileData, target string, year bool, month bool, c
 		}
 		if datePrio == true {
 			if month == true {
-				targetPath = filepath.Join(target, fileYear)
-				targetPath = filepath.Join(target, fileMonth)
+				targetPath = filepath.Join(targetPath, fileYear)
+				targetPath = filepath.Join(targetPath, fileMonth)
 			} else if year == true {
-				targetPath = filepath.Join(target, fileYear)
+				targetPath = filepath.Join(targetPath, fileYear)
 			}
 			if category == true {
-				targetPath = filepath.Join(target, element.Category)
+				targetPath = filepath.Join(targetPath, element.Category)
 			}
 		} else {
 			if category == true {
-				targetPath = filepath.Join(target, element.Category)
+				targetPath = filepath.Join(targetPath, element.Category)
 			}
 			if month == true {
-				targetPath = filepath.Join(target, fileYear)
-				targetPath = filepath.Join(target, fileMonth)
+				targetPath = filepath.Join(targetPath, fileYear)
+				targetPath = filepath.Join(targetPath, fileMonth)
 			} else if year == true {
-				targetPath = filepath.Join(target, fileYear)
+				targetPath = filepath.Join(targetPath, fileYear)
 			}
 		}
 		_, err := os.Stat(targetPath)
