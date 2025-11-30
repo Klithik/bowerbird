@@ -43,10 +43,7 @@ func main() {
 
 	flag.Parse()
 
-	if dir_verification(source_dir) == false {
-		os.Exit(1)
-	}
-	if dir_verification(end_dir) == false {
+	if dir_verification(source_dir) == false || dir_verification(end_dir) == false {
 		os.Exit(1)
 	}
 
