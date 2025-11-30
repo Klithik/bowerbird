@@ -47,7 +47,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	files := scanner.Scan(source_dir, ignore_hidden, true, look_creation)
+	files := scanner.Scan(source_dir, ignore_hidden, look_creation)
 	manipulator.MoveFiles(files, end_dir, year, month, category, datePrio)
 }
 
