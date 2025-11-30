@@ -1,7 +1,6 @@
 package manipulator
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -12,10 +11,6 @@ import (
 
 func MoveFiles(files []scanner.FileData, target string, year bool, month bool, category bool, datePrio bool) [][2]string {
 	var output [][2]string
-	fmt.Printf("The category is %t\n", category)
-	fmt.Printf("The year is %t\n", year)
-	fmt.Printf("The month is %t\n", month)
-	fmt.Printf("The date prio is %t\n", datePrio)
 	for _, element := range files {
 		targetPath := target
 		fileMonth := element.ModifiedAt.Month().String()
