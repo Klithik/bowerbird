@@ -103,7 +103,7 @@ func obtainCategory(file string) string {
 		".ogg": CategoryAudio,
 		//DOCUMENTS
 		".pdf": CategoryDocument, ".doc": CategoryDocument, ".docx": CategoryDocument, ".txt": CategoryDocument,
-		".rtf": CategoryDocument, ".pptx": CategoryDocument, ".odt": CategoryDocument,
+		".rtf": CategoryDocument, ".pptx": CategoryDocument, ".odt": CategoryDocument, ".xlsx": CategoryDocument,
 		//EXECUTABLES
 		".exe": CategoryExecutable, ".msi": CategoryExecutable, ".bat": CategoryExecutable,
 		".sh": CategoryExecutable, ".app": CategoryExecutable,
