@@ -56,6 +56,9 @@ func Scan(directoryPath string, hidden bool, look_creation bool) []FileData {
 		if element.Name()[0] == '.' && hidden == true {
 			continue
 		}
+		if element.IsDir() == true {
+			continue
+		}
 		full_path := filepath.Join(directoryPath, element.Name())
 		info, _ := os.Stat(full_path)
 		sig := fileSignature{
