@@ -20,7 +20,7 @@ func main() {
 	flag.StringVar(&source_dir, "source", ".", source_dirDoc)
 
 	const end_dirDoc string = "The directory where the folders to be created should be placed, by default it uses the current directory"
-	flag.StringVar(&end_dir, "end", ".", end_dirDoc)
+	flag.StringVar(&end_dir, "end", "", end_dirDoc)
 
 	const ignoreHiddenDoc string = "Ignores hidden files (files starting with a '.' character)"
 	flag.BoolVar(&ignore_hidden, "ignore_hidden", true, ignoreHiddenDoc)
@@ -37,11 +37,14 @@ func main() {
 	const look_creationDoc string = "Looks for file creatio date instead of last modification, this is not supported in every filesystem, if it fails it will just use the last modification date. This flag doesnt do anything if neither the year or month are true"
 	flag.BoolVar(&look_creation, "creation", false, look_creationDoc)
 
+	flag.Parse()
+
 	if month == true {
 		year = true
 	}
-
-	flag.Parse()
+	if end_dir == "" {
+		end_dir = source_dir
+	}
 
 	if dir_verification(source_dir) == false || dir_verification(end_dir) == false {
 		os.Exit(1)
