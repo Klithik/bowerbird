@@ -19,7 +19,7 @@ func main() {
 	const source_dirDoc string = "The directory to be sorted, by default it uses the current directory"
 	flag.StringVar(&source_dir, "source", ".", source_dirDoc)
 
-	const end_dirDoc string = "The directory where the folders to be created should be placed, by default it uses the current directory"
+	const end_dirDoc string = "The directory where the folders to be created should be placed, by default it uses the same directory as the source one"
 	flag.StringVar(&end_dir, "end", "", end_dirDoc)
 
 	const ignoreHiddenDoc string = "Ignores hidden files (files starting with a '.' character)"
