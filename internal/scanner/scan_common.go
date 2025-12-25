@@ -34,6 +34,7 @@ const (
 	CategoryUnknown    = "Unknown"
 )
 
+// Known byte signatures for specific extensions. Unused for now but meant to get the file type when there isnt an extension available.
 var knownSignatures = []fileSignature{
 	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE0}},
 	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xDB}},
@@ -41,6 +42,7 @@ var knownSignatures = []fileSignature{
 	{Extension: "jpg", Signature: []byte{0xFF, 0xD8, 0xFF, 0xE1}},
 }
 
+// Iterates a directory to creat an array of FileData, so the functions that operates the files have the necesary info at hand.
 func Scan(directoryPath string, hidden bool, look_creation bool) []FileData {
 	var files []FileData
 	read, err := os.ReadDir(directoryPath)

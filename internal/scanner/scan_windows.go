@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// Obtains the creation date of a unix file, if the birth time is supported but not defined in a particular file, it returns the last modification date.
 func obtainCreationDate(file string) (time.Time, error) {
 	info, err := os.Stat(file)
 	if err != nil {
