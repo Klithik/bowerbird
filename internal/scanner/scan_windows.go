@@ -19,3 +19,9 @@ func obtainCreationDate(file string) (time.Time, error) {
 	creation := time.Unix(0, sysData.CreationTime.Nanoseconds())
 	return creation, nil
 }
+
+func obtainPerms(info os.FileInfo) bool {
+	// TEMPORARY CONTINUE, I NEED TO CHECK
+	// HOW DOES GO HANDLE FILE PERMS
+	return true
+}

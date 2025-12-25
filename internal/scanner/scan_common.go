@@ -61,6 +61,11 @@ func Scan(directoryPath string, hidden bool, look_creation bool) []FileData {
 		}
 		full_path := filepath.Join(directoryPath, element.Name())
 		info, _ := os.Stat(full_path)
+		perms := obtainPerms(info)
+		if perms == false {
+			fmt.Printf("The current user doenst have read and write access to the file %v, so it will be skipped", element.Name())
+			continue
+		}
 		sig := fileSignature{
 			Extension: filepath.Ext(full_path),
 		}

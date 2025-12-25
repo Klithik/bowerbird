@@ -4,9 +4,9 @@ package scanner
 
 import (
 	"fmt"
-	"time"
-
 	"golang.org/x/sys/unix"
+	"os"
+	"time"
 )
 
 func obtainCreationDate(file string) (time.Time, error) {
@@ -19,4 +19,12 @@ func obtainCreationDate(file string) (time.Time, error) {
 		return time.Time{}, fmt.Errorf("birth time not available")
 	}
 	return time.Unix(stat.Btime.Sec, int64(stat.Btime.Nsec)), nil
+}
+
+func obtainPerms(info os.FileInfo) bool {
+	perms := info.Mode().Perm()
+	if perms&0b110000000 == 0b110000000 {
+		return true
+	}
+	return false
 }
